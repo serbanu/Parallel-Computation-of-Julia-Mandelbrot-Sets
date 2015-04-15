@@ -1,0 +1,32 @@
+Student: Mardaloescu Serban
+Grupa: 334CA
+
+			Tema 3 APD - Calcul paralel folosind MPI
+
+	Tema este scrisa in limbajul C++. In componenta ei intra mai multe fisiere, si anume:
+		*main.cpp:	programul principal;
+		*info.h:	fisier ce descrie structura unui mesaj informativ trimis de catre master;
+		*complex.h:	fisier ce descrie calitatile unui numar complex, dar si cateva operatii pe numere complexe;
+		*complex.cpp: implementarea operatiilor de mai sus.
+
+	Mai jos o sa ofer o descriere succinta a acestora.
+	1) Fisierul `main.cpp` este fisierul ce contine programul principal. In acesta am declarat protipurile functiilor
+ce calculeaza multimile Mandelbrot si Julia, am citit din fisier corespunzator, am copiat elementele de interes pentru
+workeri intr-o instanta a unei clase ce urmeaza sa fie trimisa de catre `master` muncitorilor.
+	Am impartit matricea in numar de linii egal cu height/num_of_processes, iar restul liniilor ce raman neasignate sunt
+preluate si prelucrate de catre master. Acesta trimite structura catre toate celelalte procese, daca acestea exista,
+bineinteles, si apoi incepe prelucrarea liniilor proprii.
+	Procesele de tip worker primesc informatia de la master si incep a-si prelucra liniile asignate, aplicand unul din 
+cei doi algoritmi si retinand rezultatele intr-un vector denumit `array` ce contine pe prima pozitie linia ce este prelu-
+crata. Dupa ce finalizeaza de prelucrat o linie, un worker trimite acest vector catre master si isi continua lucrul pana
+cand finalizeaza.
+	Master-ul primeste, dupa ce termina de prelucrat task-urile proprii, informatiile de la workeri si scrie rezultatele in
+matricea de culori(color_matrix). Dupa ce termina acest lucru, scrie matricea in fisierul de iesire. O varianta mai rapida
+ar fi fost aceea de a scrie direct atat rezultatele primite de la workeri, cat si cele proprii in fisierul de iesire, dar
+din moment ce ideea aceasta mi-a venit chiar cand scriu acest ReadMe, nu am avut timpul necesar de a o implementa.
+	2) Fisierul `complex.h` este un fisier ce contine calitatile unui numar complex(partea reala si imaginara), dar si 
+cateva operatii cu acestea(adunare, inmultire, modul) implementate in fisierul `complex.cpp`.
+	3) Fisierul `info.h` este un fisier ce contine o clasa cu toate caracteristicile importante citite de catre master din 
+fisierul de intrare, dar si alte doua campuri: row si lines_to_compute. Numele sunt indeajuns de intuitive pentru a intelege
+pentru ce sunt folosite.
+	Despre implementarea algoritmilor nu am prea multe de spus, ei fiind oferiti `pe tava` in enuntul temei.
